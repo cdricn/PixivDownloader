@@ -1,26 +1,8 @@
-﻿using System;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Diagnostics;
-using System.Net.Http;
-using static System.Net.Mime.MediaTypeNames;
-using System.Windows.Documents.DocumentStructures;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-using OpenQA.Selenium.DevTools.V123.FedCm;
-using System.IO;
-using System.Net;  
-using System.Runtime.InteropServices;
-using System.Printing;
 
 
 namespace PixivScraper
@@ -37,6 +19,7 @@ namespace PixivScraper
             InitializeComponent();
         }
         
+        // Buttons
         private void scrapeButton_Click(object sender, RoutedEventArgs e)
         {
             string url = linkTextBox.Text.Trim();
@@ -50,34 +33,33 @@ namespace PixivScraper
                 driver.Navigate().GoToUrl(url);
                 logRichBox.AppendText(Environment.NewLine + "Valid Url. Going to: " + url);
 
-                scrapeLoop(driver, url, logRichBox);
+                try
+                {
+                    scrapeButton.IsEnabled = false;
+                    scrapeLoop(driver, url, logRichBox);
+                    scrapeButton.IsEnabled = true;
+                }
+                catch (Exception ex)
+                {
+                    logRichBox.AppendText(Environment.NewLine + "Could not load page. " + ex.ToString());
+                }
                 //test(driver, url, logRichBox);
             }
         }
 
-        public static void login(ChromeDriver driver, string input, string type)
+        private void dirButton_Click(object sender, RoutedEventArgs e)
         {
-            // LOGIN put in mainpage for implementation
-            //string mainpage = "https://www.pixiv.net/en/";
-            //string username = usernameTextBox.Text.Trim();
-            //string password = passwordTextBox.Text.Trim();
-            //driver.Navigate().GoToUrl(mainpage);
-            //logRichBox.AppendText(Environment.NewLine + "Logging in PIXIV account...");
-            //IWebElement loginForm = driver.FindElement(By.XPath("//a[@class='signup-form__submit--login']"));
-            //wait.Until(d => loginForm.Displayed);
-            //loginForm.Click();
-            //login(driver, username, "text");
-            //login(driver, password, "password");
-            //IWebElement loginButton = driver.FindElement(By.CssSelector(".sc-aXZVg.fSnEpf.sc-eqUAAy.hhGKQA.sc-2o1uwj-10.ldVSLT.sc-2o1uwj-10.ldVSLT"));
-            //wait.Until(d => loginButton.Enabled);
-            //loginButton.Click();
 
-            string xpathString = String.Format("//input[@type='{0}']", type);
-            IWebElement textBox = driver.FindElement(By.XPath(xpathString));
-            textBox.Clear();
-            textBox.SendKeys(input);
         }
 
+        private void quitButton_Click(object sender, RoutedEventArgs e)
+        {
+            string test = "https://en.wikipedia.org/wiki/White#/media/File:Delphinapterus_leucas_2.jpg";
+            string test2 = "https://i.pximg.net/img-original/img/2024/06/01/06/00/08/119232545_p0.jpg/";
+            string path = "C:\\Users\\tile\\Downloads\\WHAT.jpg";
+        }
+
+        // Process
         private static void scrapeLoop(ChromeDriver driver, string url, RichTextBox logRichBox)
         {
             // Test user w/ illust: https://www.pixiv.net/en/users/8024586/illustrations
@@ -166,6 +148,7 @@ namespace PixivScraper
             return false;
         }
 
+        // Repeats
         private static void clickLoop(IList<IWebElement> list, WebDriverWait wait, int i)
         {
             IWebElement element = list[i];
@@ -182,16 +165,7 @@ namespace PixivScraper
 
 
 
-
-
-         
-        private void quitButton_Click(object sender, RoutedEventArgs e)
-        {
-            string test = "https://en.wikipedia.org/wiki/White#/media/File:Delphinapterus_leucas_2.jpg";
-            string test2 = "https://i.pximg.net/img-original/img/2024/06/01/06/00/08/119232545_p0.jpg/";
-            string path = "C:\\Users\\tile\\Downloads\\WHAT.jpg";
-        }
-
+        // Test
         public static void SaveImageUsingJS(IWebDriver driver, string imageSelector) //async Task
         {
             IWebElement imageElement = driver.FindElement(By.CssSelector(imageSelector)); // Replace with your selector
@@ -205,6 +179,27 @@ namespace PixivScraper
 
             ((IJavaScriptExecutor)driver).ExecuteScript(script, imageElement);
         }
+        public static void login(ChromeDriver driver, string input, string type)
+        {
+            // LOGIN put in mainpage for implementation
+            //string mainpage = "https://www.pixiv.net/en/";
+            //string username = usernameTextBox.Text.Trim();
+            //string password = passwordTextBox.Text.Trim();
+            //driver.Navigate().GoToUrl(mainpage);
+            //logRichBox.AppendText(Environment.NewLine + "Logging in PIXIV account...");
+            //IWebElement loginForm = driver.FindElement(By.XPath("//a[@class='signup-form__submit--login']"));
+            //wait.Until(d => loginForm.Displayed);
+            //loginForm.Click();
+            //login(driver, username, "text");
+            //login(driver, password, "password");
+            //IWebElement loginButton = driver.FindElement(By.CssSelector(".sc-aXZVg.fSnEpf.sc-eqUAAy.hhGKQA.sc-2o1uwj-10.ldVSLT.sc-2o1uwj-10.ldVSLT"));
+            //wait.Until(d => loginButton.Enabled);
+            //loginButton.Click();
 
+            string xpathString = String.Format("//input[@type='{0}']", type);
+            IWebElement textBox = driver.FindElement(By.XPath(xpathString));
+            textBox.Clear();
+            textBox.SendKeys(input);
+        }
     }
 }
