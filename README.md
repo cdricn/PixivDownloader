@@ -4,5 +4,6 @@ Currently a work in progress.
 
 TODO: </br>
 - Rewrite code to fit MVVM design pattern
-- Downlaod correct format
+- Download correct format
 - Add custom save path
+- Bypass CloudFlare protection
